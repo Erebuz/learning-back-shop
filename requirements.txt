@@ -1,0 +1,4 @@
+sanic~=21.6.2
+setuptools~=58.1.0
+environs~=9.3.3
+secure~=0.3.0
