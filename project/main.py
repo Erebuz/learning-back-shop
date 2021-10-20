@@ -9,7 +9,7 @@ from project.settings import Settings
 from project.plugins import jwtPlugin
 
 app = Sanic(__name__)
-jwtPlugin.init(app)
+jwtPlugin.setup_jwt(app)
 CORS(app)
 
 

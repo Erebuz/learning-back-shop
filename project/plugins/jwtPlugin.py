@@ -1,12 +1,6 @@
 from sanic_jwt import initialize, exceptions
 
-from project.classes.User import User
-
-
-users = [User(1, "admin", "admin", ['admin']), User(2, "user", "user", ["user"])]
-
-username_table = {u.username: u for u in users}
-userid_table = {u.user_id: u for u in users}
+from project.bd.handler import username_table, userid_table
 
 
 async def authenticate(request, *args, **kwargs):
@@ -29,7 +23,7 @@ async def authenticate(request, *args, **kwargs):
 async def retrieve_user(request, payload, *args, **kwargs):
     if payload:
         user_id = payload.get('user_id', None)
-        user = users[0]
+        user = userid_table.get(user_id, None)
         return user
     else:
         return None
@@ -39,7 +33,7 @@ async def get_user_roles(user, *args, **kwargs):
     return user.scopes
 
 
-def init(app):
+def setup_jwt(app):
     initialize(app,
                authenticate=authenticate,
                retrieve_user=retrieve_user,
