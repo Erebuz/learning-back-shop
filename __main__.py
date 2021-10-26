@@ -1,3 +1,5 @@
-from project.main import init
+from project.main import App
 
-init()
+
+if __name__ == '__main__':
+    App()

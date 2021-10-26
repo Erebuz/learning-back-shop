@@ -1,5 +1,4 @@
 aiofiles==0.7.0
-cffi==1.15.0
 cryptography==35.0.0
 environs==9.3.4
 httptools==0.3.0

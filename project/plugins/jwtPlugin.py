@@ -1,3 +1,5 @@
+from hashlib import sha256
+
 from sanic_jwt import initialize, exceptions
 
 from project.db.handler import DBHandler
@@ -6,7 +8,10 @@ from project.db.handler import DBHandler
 async def authenticate(request, *args, **kwargs):
     db = DBHandler()
     username = request.json.get("username", None)
-    password = request.json.get("password", None)
+    password = sha256(bytes(request.json.get("password", None), encoding="utf-8")).hexdigest()
+
+    print(password)
+
     user = db.get_user_by_username(username)
 
     del db
@@ -35,8 +40,26 @@ async def get_user_roles(user, *args, **kwargs):
     return user.roles
 
 
+async def store_refresh_token(user_id, refresh_token, *args, **kwargs):
+    db = DBHandler()
+    db.store_refresh_token(user_id, refresh_token)
+    del db
+
+
+async def retrieve_refresh_token(request, user_id, *args, **kwargs):
+    db = DBHandler()
+    token = db.get_refresh_token_by_user_id(user_id)
+    del db
+    return token
+
+
 def setup_jwt(app):
     initialize(app,
                authenticate=authenticate,
                retrieve_user=retrieve_user,
-               add_scopes_to_payload=get_user_roles)
+               add_scopes_to_payload=get_user_roles,
+               secret="serenity",
+               refresh_token_enabled=True,
+               store_refresh_token=store_refresh_token,
+               retrieve_refresh_token=retrieve_refresh_token
+               )
