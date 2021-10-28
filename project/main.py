@@ -10,14 +10,14 @@ from project.settings import Settings
 
 class App:
     def __init__(self):
-        env = Env()
-        env.read_env()
-
         app = Sanic(__name__)
         app.config.update(Settings)
 
         jwtPlugin.setup_jwt(app)
         CORS(app)
+
+        env = Env()
+        env.read_env()
 
         setup_routes(app)
         setup_middlewares(app)

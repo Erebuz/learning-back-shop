@@ -1,9 +1,9 @@
 class User:
 
-    def __init__(self, id, username, password, roles):
-        self.user_id = id
-        self.username = username
-        self.password = password
+    def __init__(self, user_id, login, pass_hash, roles):
+        self.user_id = user_id
+        self.username = login
+        self.pass_hash = pass_hash
         self.roles = roles
 
     def __repr__(self):
