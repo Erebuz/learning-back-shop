@@ -1,8 +1,9 @@
 from datetime import timedelta, datetime
+from hashlib import sha256
 
 import pymysql
 
-from project.classes.User import User
+from project.classes.User import UserAuth
 
 
 class DBHandler:
@@ -19,11 +20,11 @@ class DBHandler:
             curs = conn.cursor()
             curs.execute("SELECT * FROM user WHERE login='{}'".format(username))
             row = curs.fetchone()
-            user = User(user_id=row[0], login=row[1], pass_hash=row[2], roles=row[5])
+            user = UserAuth(user_id=row[0], login=row[1], pass_hash=row[2], roles=row[5])
 
         return user
 
-    def get_user_by_user_id(self, user_id):
+    def get_user_auth(self, user_id):
         with pymysql.connect(host=self.host, port=self.port, user=self.user, passwd=self.passwd,
                              db=self.db) as conn:
             curs = conn.cursor()
@@ -31,7 +32,7 @@ class DBHandler:
             row = curs.fetchone()
             curs.execute("SELECT name FROM shop.group WHERE group_id='{}'".format(row[3]))
             roles = curs.fetchone()
-            user = User(user_id=row[0], login=row[1], pass_hash=row[2], roles=roles)
+            user = UserAuth(user_id=row[0], login=row[1], pass_hash=row[2], roles=roles)
 
         return user
 
@@ -56,3 +57,48 @@ class DBHandler:
                 return None
 
             return token
+
+    def set_new_user(self, user_json):
+        with pymysql.connect(host=self.host, port=self.port, user=self.user, passwd=self.passwd,
+                             db=self.db) as conn:
+            curs = conn.cursor()
+
+            pass_hash = sha256(bytes(user_json["password"], encoding="utf-8")).hexdigest()
+            sql_string = "INSERT INTO shop.user SET login='{}', pass_hash='{}', firstname='{}', lastname='{}'," \
+                         "phone_number='{}', address_city='{}', address_street='{}', address_build='{}'," \
+                         "address_apartment='{}', mail='{}', birth_date=NULL, group_id = 4"
+            sql_string = sql_string.format(user_json['login'],
+                                           pass_hash,
+                                           user_json[
+                                               'firstname'],
+                                           user_json[
+                                               'lastname'],
+                                           user_json[
+                                               'phone_number'],
+                                           user_json['address'][
+                                               'city'],
+                                           user_json['address'][
+                                               'street'],
+                                           user_json['address'][
+                                               'build'],
+                                           user_json['address'][
+                                               'apartment'],
+                                           user_json['mail'],
+                                           user_json[
+                                               'birth_date'])
+            curs.execute(sql_string)
+            conn.commit()
+
+
+def get_user_data(self, user_id):
+    with pymysql.connect(host=self.host, port=self.port, user=self.user, passwd=self.passwd,
+                         db=self.db) as conn:
+        curs = conn.cursor()
+        curs.execute(
+            "SELECT  FROM shop.user WHERE user_id='{}'".format(user_id))
+        row = curs.fetchone()
+        curs.execute("SELECT name FROM shop.group WHERE group_id='{}'".format(row[3]))
+        roles = curs.fetchone()
+        user = UserAuth(user_id=row[0], login=row[1], pass_hash=row[2], roles=roles)
+
+    return user

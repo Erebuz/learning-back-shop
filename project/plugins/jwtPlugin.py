@@ -30,7 +30,7 @@ async def retrieve_user(request, payload, *args, **kwargs):
         if user_id is None:
             return None
 
-        user = db.get_user_by_user_id(user_id)
+        user = db.get_user_auth(user_id)
         del db
         return user
     else:

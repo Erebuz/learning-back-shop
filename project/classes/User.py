@@ -1,4 +1,4 @@
-class User:
+class UserAuth:
 
     def __init__(self, user_id, login, pass_hash, roles):
         self.user_id = user_id
@@ -11,3 +11,8 @@ class User:
 
     def to_dict(self):
         return {"user_id": self.user_id, "username": self.username, "roles": self.roles}
+
+
+class UserData:
+    def __init__(self):
+        self.user_id = 1
