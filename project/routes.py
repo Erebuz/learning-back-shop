@@ -5,22 +5,6 @@ from project.db.handler import DBHandler
 
 
 def setup_routes(app):
-    # @app.route("/", methods=["GET"])
-    # async def general(request):
-    #     return response.json(status=200, body={"name": "general"})
-
-    # @app.route("/admin")
-    # @protected()
-    # @scoped("admin")
-    # async def admin(request, *args, **kwargs):
-    #     return json(status=200, body={"name": "admin"})
-    #
-    # @app.route("/user")
-    # @protected()
-    # @scoped(["user", "admin"], False)
-    # async def user(request, *args, **kwargs):
-    #     return json(status=200, body={"name": "user"})
-
     @app.route("/reg/admin", methods=["POST"])
     @protected()
     @scoped(["admin"], False)

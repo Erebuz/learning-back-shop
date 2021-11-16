@@ -11,7 +11,6 @@ async def authenticate(request, *args, **kwargs):
     password = sha256(bytes(request.json.get("password", None), encoding="utf-8")).hexdigest()
 
     user = db.get_user_by_username(username)
-
     del db
 
     if not username or not password:
