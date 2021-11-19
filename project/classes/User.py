@@ -11,8 +11,3 @@ class UserAuth:
 
     def to_dict(self):
         return {"user_id": self.user_id, "username": self.username, "roles": self.roles}
-
-
-class UserData:
-    def __init__(self):
-        self.user_id = 1
