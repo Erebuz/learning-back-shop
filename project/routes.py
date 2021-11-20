@@ -124,7 +124,7 @@ def setup_routes(app):
     @app.route("/order/create_auth", methods=["POST"])
     @inject_user()
     @protected()
-    async def create_simple_order(req, user):
+    async def create_order(req, user):
         db = DBHandler()
         db.create_new_order(user.user_id, req.json["basket"])
         del db

@@ -1,4 +1,4 @@
-from datetime import timedelta, datetime
+from datetime import timedelta, date, datetime
 from hashlib import sha256
 
 import pymysql
@@ -67,7 +67,7 @@ class DBHandler:
             pass_hash = sha256(bytes(user_json["password"], encoding="utf-8")).hexdigest()
 
             if user_json['birth_date'] == "":
-                birth_date = str(datetime.today())
+                birth_date = str(date.today())
             else:
                 birth_date = user_json['birth_date']
 
