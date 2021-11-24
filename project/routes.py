@@ -129,3 +129,12 @@ def setup_routes(app):
         db.create_new_order(user.user_id, req.json["basket"])
         del db
         return text(status=200, body="OK")
+
+    @app.route("/order/history", methods=["GET"])
+    @inject_user()
+    @protected()
+    async def get_history(req, user):
+        db = DBHandler()
+        data = db.get_client_history(user.user_id)
+        del db
+        return json(status=200, body=data)

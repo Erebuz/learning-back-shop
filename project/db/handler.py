@@ -4,7 +4,7 @@ from hashlib import sha256
 import pymysql
 
 from project.classes.User import UserAuth
-from project.classes.Product import Product
+from project.classes.Product import *
 
 
 class DBHandler:
@@ -229,3 +229,17 @@ class DBHandler:
                 curs.execute(sql_str)
 
             conn.commit()
+
+    def get_client_history(self, user_id):
+        with pymysql.connect(host=self.host, port=self.port, user=self.user, passwd=self.passwd,
+                             db=self.db) as conn:
+            curs = conn.cursor()
+            sql_str = "SELECT order.order_id, product.products_id, order.count, order.status, order.date, product.seller_price, product.material, product.description FROM shop.order, shop.product WHERE order.customer_id='{}' AND order.product_id=product.products_id".format(user_id)
+            curs.execute(sql_str)
+            data = curs.fetchall()
+
+            temp = []
+            for row in data:
+                temp.append(ProductHistory(row).to_dict())
+            return temp
+
